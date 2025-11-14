@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Talah Overview – Anime, Serien & Trash TV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050716;
+      --card-bg: #111325;
+      --accent: #ff2e9f;
+      --accent-soft: #ff7ac5;
+      --text-main: #f7f7ff;
+      --text-muted: #b0b3d6;
+      --radius-xl: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #281336 0, #050716 45%, #02020a 100%);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1200px;
+      padding: 1.5rem 1.2rem 3rem;
+      scroll-behavior: smooth;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    .logo span {
+      background: linear-gradient(120deg, #ff2e9f, #ff7ac5, #5af2f2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .logo::after {2
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.2rem;
+      width: 60%;
+      height: 2px;
+      background: linear-gradient(90deg, #ff2e9f, transparent);
+      opacity: 0.8;
+    }
+
+    nav {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.9rem;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      transition: 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--text-main);
+      background: rgba(255, 46, 159, 0.12);
+    }
+
+    .nav-pill-main {
+      background: rgba(255, 46, 159, 0.18);
+      color: var(--text-main);
+    }
+
+    /* Hero */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.6fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero-text {
+      background: linear-gradient(135deg, rgba(17, 16, 41, 0.95), rgba(28, 9, 34, 0.95));
+      padding: 1.6rem;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255, 122, 197, 0.25);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+    }
+
+    .hero-kicker {
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-title {
+      font-size: 2rem;
+      line-height: 1.18;
+      margin-bottom: 0.7rem;
+    }
+
+    .hero-sub {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 1.3rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-primary {
+      border: none;
+      background: linear-gradient(120deg, #ff2e9f, #ff7ac5);
+      color: white;
+      padding: 0.6rem 1.4rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(255, 46, 159, 0.5);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(255, 46, 159, 0.6);
+    }
+
+    .btn-primary a {
+      color: inherit;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .hero-image {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+    }
+
+    .hero-image img {
+      width: 100%;
+      object-fit: cover;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 2.1rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.9rem;
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+    }
+
+    .section-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Cards */
+    .card-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #111325, #1a1630);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 22px 44px rgba(0, 0, 0, 0.7);
+      border-color: rgba(255, 46, 159, 0.45);
+    }
+
+    .card img {
+      width: 100%;
+      display: bloc2k;
+      height: 185px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 0.6rem 0.7rem 0.7rem;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .tag {
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(255, 46, 159, 0.12);
+      color: var(--accent-soft);
+    }
+
+    .tag.cyan {
+      background: rgba(90, 242, 242, 0.12);
+      color: #5af2f2;
+    }
+
+    /* News cards */
+    .news-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .news-card {
+      background: rgba(8, 10, 25, 0.9);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.85rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .news-kicker {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+      margin-bottom: 0.3rem;
+    }
+
+    .news-title {
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .news-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .news-meta {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      opacity: 0.9;
+    }
+
+    footer {
+      margin-top: 1.8rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #0b0d1e;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-width: 420px;
+      width: 90%;
+      padding: 1.2rem 1.4rem 1.3rem;
+      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-title {
+      font-size: 1rem;
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      color: #f7f7ff;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .modal-question {
+      font-size: 0.8rem;
+      color: var(--accent-soft);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .modal-platforms {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .platform-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #14172b;
+      padding: 0.45rem 0.7rem;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: 0.15s ease;
+    }
+
+    .platform-btn sp2an.label {
+      font-weight: 500;
+    }
+
+    .platform-btn span.meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .platform-btn:hover {
+      background: #1e2140;
+      border-color: var(--accent-soft);
+    }
+
+    @media (max-width: 820px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      nav {
+        font-size: 0.8rem;
+      }
+
+      .hero-title {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="logo"><span>Talah Overview</span></div>
+      <nav>
+        <a href="#home" class="nav-pill-main">Home</a>
+        <a href="#anime">Anime</a>
+        <a href="#serien">Serien</a>
+        <a href="#trash">Trash TV</a>
+        <a href="#news">News</a>
+      </nav>
+    </header>
+
+    <!-- Hero -->
+    <section id="home" class="hero">
+      <div class="hero-text">
+        <div class="hero-kicker">Flash News</div>
+        <h1 class="hero-title">Anime. Serien. Trash TV. Alles in einem Stream.</h1>
+        <p class="hero-sub">
+          Deine tägliche Dosis News, Drama und Highlights. Dunkel, neon, atmosphärisch – genau wie du’s brauchst.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-primary">
+            <a href="#trending">🔥 Highlights ansehen</a>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-image">
+        <img src="images/hi.jpg" alt="Neon City Hero">
+      </div>
+    </section>
+
+    <!-- Trending -->
+    <section id="trending" class="section">
+      <div class="section-header">
+        <h2 class="section-title">🔥 Trending jetzt</h2>
+        <span class="section-sub">Was gerade alle bingen.</span>
+      </div>
+      <div class="card-row">
+        <article class="card">
+          <a class="card-link" href="#" data-id="aot">
+            <img src="images/anime_aot.jpg" alt="Attack on Titan Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Attack on Titan – Finale</h3>
+              <div class="card-meta">
+                <span class="tag">Anime</span>
+                <span>Simulcast</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card">
+          <a class="card-link" href="#" data-id="squid_game">
+            <img src="images/show_squid_game.jpg" alt="Squid Game Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Squid Game – Staffel 2 Hype</h3>
+              <div class="card-meta">
+                <span class="tag cyan">Serie</span>
+                <span>Netflix</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card">
+          <a class="card-link" href="#" data-id="love_island">
+            <img src="images/trash_love_island.jpg" alt="Love Island Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Love Island – Couple-Chaos</h3>
+              <div class="card-meta">
+                <span class="tag">Trash TV</span>
+                <span>RTL+</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card">
+          <a class="card-link" href="#" data-id="jjk">
+            <img src="images/anime_jujutsu.jpg" alt="Jujutsu Kaisen Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Jujutsu Kaisen – Cursed Hype</h3>
+              <div class="card-meta">
+                <span class="tag">Anime</span>
+                <span>Simulcast</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Anime -->
+    <section id="anime" class="section">
+      <div class="section-header">
+        <h2 class="section-title">🎌 Anime Highlights</h2>
+        <span class="section-sub">Dark pink vibes only.</span>
+      </div>
+      <div class="card-row">
+        <article class="card">
+          <a class="card-link" href="#" data-id="solo">
+            <img src="images/anime_solo_leveling.jpg" alt="Solo Leveling Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Solo Leveling</h3>
+              <div class="card-meta">
+                <span class="tag">Anime</span>
+                <span>Simulcast</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card">
+          <a class="card-link" href="#" data-id="one_piece">
+            <img src="images/anime_one_piece.jpg" alt="One Piece Poster" />
+            <div class="card-body">
+              <h3 class="card-title">One Piece – Yonko Era</h3>
+              <div class="card-meta">
+                <span class="tag">Anime</span>
+                <span>Evergreen</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card">
+          <a class="card-link" href="#" data-id="aot">
+            <img src="images/anime_aot.jpg" alt="Attack on Titan Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Attack on Titan</h3>
+              <div class="card-meta">
+                <span class="tag">Anime</span>
+                <span>Dark</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card">
+          <a class="card-link" href="#" data-id="jjk">
+            <img src="images/anime_jujutsu.jpg" alt="Jujutsu Kaisen Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Jujutsu Kaisen</h3>
+              <div class="card-meta">
+                <span class="tag">Anime</span>
+                <span>Shonen</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Serien -->
+    <section id="serien" class="section">
+      <div class="section-header">
+        <h2 class="section-title">📺 Serien Radar</h2>
+        <span class="section-sub">Cliffhanger, Binge & Spoiler-Alarm.</span>
+      </div>
+      <div class="card-row">
+        <article class="card">
+          <a class="card-link" href="#" data-id="stranger_things">
+            <img src="images/show_stranger_things.jpg" alt="Stranger Things Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Stranger Things – Finale in Sicht</h3>
+              <div class="card-meta">
+                <span class="tag cyan">Serie</span>
+                <span>Netflix</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card">
+          <a class="card-link" href="#" data-id="money_heist">
+            <img src="images/show_haus_des_geldes.jpg" alt="Haus des Geldes Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Haus des Geldes – Heist-Legende</h3>
+              <div class="card-meta">
+                <span class="tag cyan">Serie</span>
+                <span>Netflix</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card">
+          <a class="card-link" href="#" data-id="prison_break">
+            <img src="images/show_prison_break.jpg" alt="Prison Break Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Prison Break – Comeback-Gerüchte</h3>
+              <div class="card-meta">
+                <span class="tag cyan">Serie</span>
+                <span>Disney+</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Trash TV -->
+    <section id="trash" class="section">
+      <div class="section-header">
+        <h2 class="section-title">💔 Trash TV DramaZone</h2>
+        <span class="section-sub">Guilty Pleasure? Wir verraten nichts.</span>
+      </div>
+      <div class="card-row">
+        <article class="card">
+          <a class="card-link" href="#" data-id="love_island">
+            <img src="images/trash_love_island.jpg" alt="Love Island Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Love Island – Heiße Flirts</h3>
+              <div class="card-meta">
+                <span class="tag">Trash TV</span>
+                <span>RTL+</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card">
+          <a class="card-link" href="#" data-id="temptation">
+            <img src="images/trash_temptation_island.jpg" alt="Temptation Island Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Temptation Island – Versuchung pur</h3>
+              <div class="card-meta">
+                <span class="tag">Trash TV</span>
+                <span>RTL+</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card">
+          <a class="card-link" href="#" data-id="ayto">
+            <img src="images/trash_are_you_the_one.jpg" alt="Are You The One Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Are You The One?</h3>
+              <div class="card-meta">
+                <span class="tag">Trash TV</span>
+                <span>RTL+</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card">
+          <a class="card-link" href="#" data-id="ex_on_the_beach">
+            <img src="images/trash_ex_on_the_beach.jpg" alt="Ex on the Beach Poster" />
+            <div class="card-body">
+              <h3 class="card-title">Ex on the Beach – Ex-Faktor</h3>
+              <div class="card-meta">
+                <span class="tag">Trash TV</span>
+                <span>RTL+</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Newsflash -->
+    <section id="news" class="section">
+      <div class="section-header">
+        <h2 class="section-title">📰 FlareStream Newsflash</h2>
+        <span class="section-sub">Kurz, laut & auf den Punkt.</span>
+      </div>
+      <div class="news-row">
+        <article class="news-card">
+          <div class="news-kicker">Anime Update</div>
+          <h3 class="news-title">Neue Season, neue Openings.</h3>
+          <p class="news-text">
+            Mehrere Top-Animes kehren dieses Jahr zurück – frische Intros, neue Arcs
+            und ein Hype-Level, das kaum noch messbar ist.
+          </p>
+          <div class="news-meta">Vor 2 Stunden • Simulcast</div>
+        </article>
+
+        <article class="news-card">
+          <div class="news-kicker">Serien Release</div>
+          <h3 class="news-title">Cliffhanger-Serien bekommen Finale.</h3>
+          <p class="news-text">
+            Lange pausierte Shows melden sich zurück und schließen endlich Storylines,
+            die seit Jahren offen sind.
+          </p>
+          <div class="news-meta">Heute • Global Launch</div>
+        </article>
+
+        <article class="news-card">
+          <div class="news-kicker">Reality Drama</div>
+          <h3 class="news-title">Trash TV Cast sorgt für Memes.</h3>
+          <p class="news-text">
+            Ein einziger Streit reicht und das Internet baut daraus
+            einen kompletten Meme-Kosmos.
+          </p>
+          <div class="news-meta">Gestern • Social Buzz</div>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      © 2025 FlareStream • Fanprojekt für Anime, Serien & Reality – kein offizieller Streamingdienst.
+    </footer>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Titel</h3>
+        <button class="modal-close" id="modal-close" aria-label="Schließen">×</button>
+      </div>
+      <div class="modal-question" id="modal-question">
+        Wo schaust du diese Serie?
+      </div>
+      <p class="modal-desc" id="modal-desc">
+        Kurze Beschreibung …
+      </p>
+      <div class="modal-platforms" id="modal-platforms">
+        <!-- Buttons werden per JS eingefügt -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mapping: welche Serie hat welche Beschreibung & Plattformen
+    const streamingData = {
+      aot: {
+        title: "Attack on Titan",
+        desc: "Menschheit hinter Mauern, Titanen vor der Tür und ein Krieg um Freiheit.",
+        platforms: [
+          {
+            label: "Crunchyroll – komplette Serie",
+            meta: "Legal, Simulcast/On-Demand",
+            url: "https://www.crunchyroll.com/series/GR751KNZY/attack-on-titan"
+          }
+        ]
+      },
+      jjk: {
+        title: "Jujutsu Kaisen",
+        desc: "Flüche, Jujutsu-Zauberer und einer der härtesten Shonen der New Gen.",
+        platforms: [
+          {
+            label: "Crunchyroll – Jujutsu Kaisen",
+            meta: "Staffeln & Film",
+            url: "https://www.crunchyroll.com/series/GRDV0019R/jujutsu-kaisen"
+          }
+        ]
+      },
+      solo: {
+        title: "Solo Leveling",
+        desc: "Vom schwächsten Hunter zum lebenden Cheat – Dungeon nach Dungeon.",
+        platforms: [
+          {
+            label: "Crunchyroll – Solo Leveling",
+            meta: "Aktuelle Season",
+            url: "https://www.crunchyroll.com/series/GDKHZEJ0K/solo-leveling"
+          }
+        ]
+      },
+      one_piece: {
+        title: "One Piece",
+        desc: "Strohhüte, Grandline, Yonko – die Mutter aller Abenteuer-Anime.",
+        platforms: [
+          {
+            label: "Crunchyroll – One Piece",
+            meta: "Viele Episoden, viel Zeit",
+            url: "https://www.crunchyroll.com/search?q=one%20piece"
+          }
+        ]
+      },
+      squid_game: {
+        title: "Squid Game",
+        desc: "Kinderspiele mit tödlichem Einsatz und 45,6 Milliarden Won im Topf.",
+        platforms: [
+          {
+            label: "Netflix – Squid Game",
+            meta: "Drama / Thriller",
+            url: "https://www.netflix.com/title/81040344"
+          }
+        ]
+      },
+      stranger_things: {
+        title: "Stranger Things",
+        desc: "80er-Jahre Vibes, Upside Down und Kids gegen Monster.",
+        platforms: [
+          {
+            label: "Netflix – Stranger Things",
+            meta: "4 Staffeln",
+            url: "https://www.netflix.com/title/80057281"
+          }
+        ]
+      },
+      money_heist: {
+        title: "Haus des Geldes (Money Heist)",
+        desc: "Der Professor, rote Overalls und ein Plan gegen die Staatskasse.",
+        platforms: [
+          {
+            label: "Netflix – Money Heist",
+            meta: "Komplette Serie",
+            url: "https://www.netflix.com/title/80192098"
+          }
+        ]
+      },
+      prison_break: {
+        title: "Prison Break",
+        desc: "Tattoo-Plan, Todestrakt und zwei Brüder gegen das System.",
+        platforms: [
+          {
+            label: "Disney+ – Prison Break",
+            meta: "Alle Staffeln",
+            url: "https://www.disneyplus.com/browse/entity-d1d023da-ebb7-474c-b858-c4890e2d5757"
+          }
+        ]
+      },
+      love_island: {
+        title: "Love Island – Heiße Flirts & wahre Liebe",
+        desc: "Villa, Sonne, Flirts und viel Reality-Drama.",
+        platforms: [
+          {
+            label: "RTL+ – Love Island",
+            meta: "Ganze Folgen",
+            url: "https://www.rtl.de/sendungen/love-island/ganze-folgen/"
+          }
+        ]
+      },
+      temptation: {
+        title: "Temptation Island",
+        desc: "Paare, Verführer:innen und Lagerfeuer der Wahrheit.",
+        platforms: [
+          {
+            label: "RTL+ – Temptation Island",
+            meta: "Show & VIP",
+            url: "https://plus.rtl.de/video-tv/shows/temptation-island-versuchung-im-paradies-121619"
+          }
+        ]
+      },
+      ayto: {
+        title: "Are You The One?",
+        desc: "Perfect Match oder Perfect Desaster – Matching-Game um Liebe & Geld.",
+        platforms: [
+          {
+            label: "RTL+ – Are You The One?",
+            meta: "Staffeln & Realitystars in Love",
+            url: "https://plus.rtl.de/video-tv/shows/are-you-the-one-859291"
+          }
+        ]
+      },
+      ex_on_the_beach: {
+        title: "Ex on the Beach",
+        desc: "Traumstrand, neue Flirts – und plötzlich steht der Ex im Zimmer.",
+        platforms: [
+          {
+            label: "RTL+ – Ex on the Beach",
+            meta: "Ganze Folgen",
+            url: "https://www.rtl.de/sendungen/ex-on-the-beach/ganze-folgen/"
+          }
+        ]
+      }
+    };
+
+    const backdrop = document.getElementById("modal-backdrop");
+    const modalTitle = document.getElementById("modal-title");
+    const modalDesc = document.getElementById("modal-desc");
+    const modalPlatforms = document.getElementById("modal-platforms");
+    const modalQuestion = document.getElementById("modal-question");
+    const modalClose = document.getElementById("modal-close");
+
+    function openModal(id) {
+      const data = streamingData[id];
+      if (!data) return;
+
+      modalTitle.textContent = data.title;
+      modalDesc.textContent = data.desc;
+      modalQuestion.textContent = "Wo möchtest du " + data.title + " schauen?";
+
+      // alte Buttons löschen
+      modalPlatforms.innerHTML = "";
+
+      data.platforms.forEach(p => {
+        const a = document.createElement("a");
+        a.href = p.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.className = "platform-btn";
+
+        const labelSpan = document.createElement("span");
+        labelSpan.className = "label";
+        labelSpan.textContent = p.label;
+
+        const metaSpan = document.createElement("span");
+        metaSpan.className = "meta";
+        metaSpan.textContent = p.meta;
+
+        a.appendChild(labelSpan);
+        a.appendChild(metaSpan);
+
+        modalPlatforms.appendChild(a);
+      });
+
+      backdrop.classList.add("active");
+    }
+
+    function closeModal() {
+      backdrop.classList.remove("active");
+    }
+
+    // Klicks auf Karten abfangen
+    document.querySelectorAll(".card-link").forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const id = link.dataset.id;
+        openModal(id);
+      });
+    });
+
+    modalClose.addEventListener("click", closeModal);
+    backdrop.addEventListener("click", e => {
+      if (e.target === backdrop) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeModal();
+    });
+  </script>
+</body>
+</html>
